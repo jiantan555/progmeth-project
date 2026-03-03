@@ -4,7 +4,7 @@ import model.card.NumberCard;
 import model.engine.GameEngine;
 import model.operator.*;
 import model.player.Player;
-
+import util.SoundManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
@@ -372,6 +372,7 @@ public class Main extends Application {
                 owner.removeCard(card);
                 engine.getExpressionList().add(card);
                 updateUI();
+                SoundManager.playSound("slidecard.wav");
             }
         });
         return btn;
@@ -538,7 +539,9 @@ public class Main extends Application {
     private void handleSubmit() {
         if (isAutoSkipping || isGameOver) return;
 
+        //SoundManager.playSound("slidecard.wav");
         if (engine.submitExpression()) {
+            SoundManager.playSound("correct.mp3");
             turnSecondsRemaining = maxTurnSeconds;
             turnTimerLabel.setText("Turn Time: " + maxTurnSeconds + "s");
             updateUI();
@@ -548,6 +551,9 @@ public class Main extends Application {
             } else if (engine.getPlayer2().getHand().isEmpty()) {
                 lockGameWithWinner(engine.getPlayer2().getName() + " WINS (Out of Cards)!");
             }
+        }
+        else {
+            SoundManager.playSound("wrong.wav");
         }
     }
 
@@ -564,6 +570,8 @@ public class Main extends Application {
         btnSubmit.setDisable(true);
         btnSkip.setDisable(true);
         btnChangeTarget.setDisable(true);
+
+        SoundManager.playSound("tadaa.flac");
 
         for (Button b : p1Operators) b.setDisable(true);
         for (Button b : p2Operators) b.setDisable(true);
